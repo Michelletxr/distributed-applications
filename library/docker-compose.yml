@@ -1,0 +1,34 @@
+version: '3.7'
+services:
+  virtual-lib:
+    container_name: virtual-lib
+    build: .
+    ports: 
+      - 8081:8081
+    environment:
+      spring.datasource.driver-class-name: org.postgresql.Driver
+      spring.datasource.username: postgres
+      spring.datasource.password: postgres
+      spring.datasource.url: jdbc:postgresql://lib-db:5432/lib_db
+      server.port: 8081
+    restart: unless-stopped
+    depends_on: 
+    - lib-db
+    networks:
+      - virtual-lib
+  lib-db:
+    container_name: lib-db
+    image: postgres
+    ports: 
+      - 5431:5432
+    environment:
+      POSTGRES_DB: lib_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    restart: unless-stopped
+    networks:
+      - virtual_lib
+
+networks:
+  virtual_lib:
+    name: virtual_lib_net
