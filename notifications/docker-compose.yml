@@ -9,7 +9,7 @@ services:
       spring.datasource.driver-class-name: org.postgresql.Driver
       spring.datasource.username: postgres
       spring.datasource.password: postgres
-      spring.datasource.url: jdbc:postgresql://lib-db:5432/livraria_db
+      spring.datasource.url: jdbc:postgresql://notifications-db:5432/notifications_db
       server.port: 8083
     restart: unless-stopped
     depends_on: 
@@ -21,7 +21,7 @@ services:
     container_name: notifications-db
     image: postgres
     ports: 
-      - 5433:5432
+      - 5434:5432
     environment:
       POSTGRES_DB: notifications_db
       POSTGRES_USER: postgres

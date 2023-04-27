@@ -1,0 +1,45 @@
+version: '3.7'
+services:
+
+  lib-db:
+    container_name: lib-db
+    image: postgres
+    ports: 
+      - 5431:5432
+    environment:
+      POSTGRES_DB: lib_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    restart: unless-stopped
+    networks:
+      - virtual_lib
+
+  auth-db:
+    container_name: auth-db
+    image: postgres
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_DB: auth_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    restart: unless-stopped
+    networks:
+      - virtual_lib
+
+  notifications-db:
+      container_name: notifications-db
+      image: postgres
+      ports:
+        - 5434:5432
+      environment:
+        POSTGRES_DB: notifications_db
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+      restart: unless-stopped
+      networks:
+        - virtual_lib
+
+networks:
+  virtual_lib:
+    name: virtual_lib_net
