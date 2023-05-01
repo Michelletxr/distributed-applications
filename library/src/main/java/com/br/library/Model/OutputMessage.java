@@ -1,5 +1,11 @@
 package com.br.library.Model;
 
-public class OutputMessage {
+import lombok.Data;
 
+import java.sql.Timestamp;
+
+@Data
+public class OutputMessage {
+    Message content;
+    Timestamp timestamp;
 }
