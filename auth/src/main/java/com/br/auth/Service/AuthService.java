@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Objects;
 import java.util.Optional;
@@ -16,10 +17,10 @@ import java.util.UUID;
 public class AuthService implements UserDetailsService {
     @Autowired
     AuthRepository repository;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
-    private BCryptPasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
+
 
     public User.UserRecord findById(UUID id){
         Optional<User> user = repository.findById(id);
@@ -37,7 +38,7 @@ public class AuthService implements UserDetailsService {
                 User user = new User().builder()
                         .userName(requestUser.userName())
                         .login(requestUser.login())
-                        .password(passwordEncoder().encode(requestUser.password()))
+                        .password(passwordEncoder.encode(requestUser.password()))
                         .email(requestUser.email())
                         .build();
 

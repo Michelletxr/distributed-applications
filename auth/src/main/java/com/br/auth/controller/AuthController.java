@@ -22,20 +22,26 @@ public class AuthController {
     private AuthService service;
     @Autowired
     private AuthenticationManager authenticationManager;
-
     @Autowired
     private JWTConfig jwtConfig;
 
     record Login(String username, String password){}
-    @PostMapping("/login")
-    public String login(@RequestBody  Login login){
-
+    @PostMapping("/teste")
+    public ResponseEntity<String> teste(@RequestBody  Login login){
+        ResponseEntity response;
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(login.username(), login.password());
         Authentication authentication = authenticationManager.authenticate(authenticationToken);
         var user = (User) authentication.getPrincipal();
-        System.out.println(user);
-        return jwtConfig.generateTokenAcess(user);
+        String token = jwtConfig.generateTokenAcess(user);
+
+        if (Objects.isNull(token))
+        {
+            response = new ResponseEntity<>("não foi possível realizar login!", HttpStatus.BAD_REQUEST);
+        }else{
+            response = new ResponseEntity<>(token, HttpStatus.OK);
+        }
+        return response;
     }
 
     @PostMapping
