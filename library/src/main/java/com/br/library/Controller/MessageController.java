@@ -8,9 +8,9 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 public class MessageController {
-    @MessageMapping("/chat")
+    @MessageMapping("/chat/info")
     @SendTo("/topic/messages")
-    public OutputMessage send(Message msg) throws Exception {
-        return new OutputMessage();
+    public void send(Message msg) throws Exception {
+        System.out.println("ola");
     }
 }
