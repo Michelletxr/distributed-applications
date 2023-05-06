@@ -12,8 +12,6 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="auth" target="17" />
-      <module name="library" target="17" />
       <module name="notifications" target="17" />
     </bytecodeTargetLevel>
   </component>
