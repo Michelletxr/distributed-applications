@@ -17,9 +17,10 @@ public class NotificationsService {
     private JavaMailSender emailSender;
     @Autowired
     private NotificationsRepository repository;
-    public Boolean sendEmail(NotificationsModel msg) {
+    public Boolean sendEmail(NotificationsModel.NotificationDto msg) {
 
-        NotificationsModel email = new NotificationsModel();
+        NotificationsModel email = new NotificationsModel(msg.emailFrom(),
+                msg.emailTo(), msg.text(), msg.title());
         email.setSendDateEmail(LocalDateTime.now());
         Boolean send = null;
 
@@ -34,6 +35,7 @@ public class NotificationsService {
             repository.save(email);
             send = true;
         } catch (MailException e){
+            System.out.println(e);
             send = false;
             email.setSendEmail(false);
         }

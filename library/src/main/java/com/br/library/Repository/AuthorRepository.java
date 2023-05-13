@@ -8,6 +8,6 @@ import java.util.UUID;
 
 public interface AuthorRepository extends JpaRepository<Author, UUID> {
 
-    Optional<Author> finAuthorByBookName(String name);
-    Optional<Author> finAuthorByBookId(UUID id);
+    //Optional<Author> finAuthorByBookName(String name);
+    //Optional<Author> finAuthorByBookId(UUID id);
 }

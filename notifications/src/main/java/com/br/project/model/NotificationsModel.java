@@ -1,12 +1,10 @@
 package com.br.project.model;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
+import lombok.*;
+
+import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -33,13 +31,13 @@ public class NotificationsModel{
     private LocalDateTime sendDateEmail;
     private Boolean sendEmail;
 
+
     @Builder
-    public void NotificationsModel(String emailFrom, String emailTo,
-                                                 String title, String text, boolean sendEmail){
+    public NotificationsModel(String emailFrom, String emailTo, String title, String text){
         this.emailFrom = emailFrom;
         this.emailTo = emailTo;
         this.text = text;
         this.title = title;
-        this.sendEmail = sendEmail;
     }
+    public record NotificationDto(String emailFrom, String emailTo, String title, String text){}
 }

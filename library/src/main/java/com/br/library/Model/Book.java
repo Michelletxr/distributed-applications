@@ -1,13 +1,13 @@
 package com.br.library.Model;
-
-import jakarta.persistence.*;
 import lombok.*;
 
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "book")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,6 +15,7 @@ import java.util.UUID;
 @ToString
 @Getter
 @Setter
+@Table(name="book", schema = "public")
 public class Book implements Serializable {
 
     @Id
@@ -31,6 +32,8 @@ public class Book implements Serializable {
 
     private float rating;
 
-    @JoinColumn(name = "author_id")
-    private Author author;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable( name = "author_book", joinColumns = {@JoinColumn(name="book_id")},
+            inverseJoinColumns = {@JoinColumn(name="author_id")})
+    private Set<Author> author;
 }

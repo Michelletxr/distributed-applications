@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -23,10 +25,14 @@ public class AuthorServiceImpl implements AuthorService{
 
     @Override
     public UUID save(AuthorDto authorDto) throws Exception {
-        Optional<Book> book = bookRepository.findById(authorDto.getBook_id());
+        List<Book> books = new ArrayList<>();
+        for (UUID id: authorDto.getBooks()) {
+            Optional<Book> book = bookRepository.findById(id);
+            if(book.isPresent()) books.add(book.get());
+        }
         UUID author_id = null;
-        if(book.isPresent()){
-            Author author = authorRepository.save(authorDto.buildAuthorDtoToAuthor(book.get()));
+        if(!books.isEmpty()){
+            Author author = authorRepository.save(authorDto.buildAuthorDtoToAuthor(books));
             author_id = author.getId();
         }else{
             throw new Exception("O livro informado não existe");
@@ -42,19 +48,19 @@ public class AuthorServiceImpl implements AuthorService{
 
     @Override
     public AuthorDto findAuthorByBookId(UUID id) {
-        Optional<Author> author = authorRepository.finAuthorByBookId(id);
+       /* Optional<Author> author = authorRepository.finAuthorByBookId(id);
         if(author.isPresent()){
             return new AuthorDto(author.get());
-        }
+        }*/
         return null;
     }
 
     @Override
     public AuthorDto findAuthorByBookName(String bookName) {
-        Optional<Author> author = authorRepository.finAuthorByBookName(bookName);
+        /*Optional<Author> author = authorRepository.finAuthorByBookName(bookName);
         if(author.isPresent()){
             return new AuthorDto(author.get());
-        }
+        }*/
         return null;
     }
 

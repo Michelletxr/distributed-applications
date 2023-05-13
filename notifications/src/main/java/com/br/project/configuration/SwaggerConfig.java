@@ -1,4 +1,4 @@
-package com.br.auth.configuration;
+package com.br.project.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

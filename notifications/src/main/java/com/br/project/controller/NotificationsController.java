@@ -2,7 +2,6 @@ package com.br.project.controller;
 
 import com.br.project.model.NotificationsModel;
 import com.br.project.service.NotificationsService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,14 +10,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
-@RequestMapping(value = "/notifications")
+@RequestMapping(value = "api/notifications")
 public class NotificationsController {
     @Autowired
     NotificationsService service;
 
     @PostMapping(value = "send-email")
-    public ResponseEntity<?> createEmail(@RequestBody @Valid NotificationsModel msg) {
+    public ResponseEntity<?> createEmail(@RequestBody @Valid NotificationsModel.NotificationDto msg) {
         ResponseEntity<?> response;
         Boolean send = service.sendEmail(msg);
         if (send) {

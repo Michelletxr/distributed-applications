@@ -22,7 +22,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/lib")
+@RequestMapping("/api/lib")
 public class LibraryController {
 
     @Autowired
@@ -39,7 +39,6 @@ public class LibraryController {
     }
 
     public ResponseEntity<?> findAllBooks(@PageableDefault(size = 5, sort={"id"}, direction = Sort.Direction.DESC) Pageable pagination){
-
         ResponseEntity<?> response;
         Page<BookDto> bookDto = serviceBooks.findAll(pagination);
         response = new ResponseEntity<>(bookDto, HttpStatus.OK);
