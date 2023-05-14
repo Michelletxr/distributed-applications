@@ -10,4 +10,5 @@ public interface AuthorRepository extends JpaRepository<Author, UUID> {
 
     //Optional<Author> finAuthorByBookName(String name);
     //Optional<Author> finAuthorByBookId(UUID id);
+    Optional<Author> findAuthorByName(String name);
 }

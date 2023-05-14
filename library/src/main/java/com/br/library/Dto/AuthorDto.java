@@ -13,18 +13,15 @@ import java.util.*;
 @ToString
 public class AuthorDto {
 
-    private UUID id;
-
     private String name;
 
     private int age;
 
-    private List<UUID> books = new ArrayList<>();
+   private List<UUID> books = new ArrayList<>();
 
     public AuthorDto(Author author){
         this.name = author.getName();
         this.age = author.getAge();
-        this.id = author.getId();
         author.getBooks().forEach(book -> this.books.add(book.getId()));
     }
 

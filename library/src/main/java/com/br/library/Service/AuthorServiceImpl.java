@@ -26,11 +26,13 @@ public class AuthorServiceImpl implements AuthorService{
     @Override
     public UUID save(AuthorDto authorDto) throws Exception {
         List<Book> books = new ArrayList<>();
+        UUID author_id = null;
+
         for (UUID id: authorDto.getBooks()) {
             Optional<Book> book = bookRepository.findById(id);
             if(book.isPresent()) books.add(book.get());
         }
-        UUID author_id = null;
+
         if(!books.isEmpty()){
             Author author = authorRepository.save(authorDto.buildAuthorDtoToAuthor(books));
             author_id = author.getId();
@@ -41,9 +43,11 @@ public class AuthorServiceImpl implements AuthorService{
     }
 
     @Override
-    public Page<AuthorDto> findAll(Pageable pagination) {
-        Page<Author> author = authorRepository.findAll(pagination);
-        return  author.map(AuthorDto:: new);
+    public List<AuthorDto> findAll() {
+        List<Author> author = authorRepository.findAll();
+        List<AuthorDto> authorDtos = new ArrayList<>();
+        author.forEach(a -> authorDtos.add(new AuthorDto(a)));
+        return  authorDtos;
     }
 
     @Override
@@ -53,6 +57,14 @@ public class AuthorServiceImpl implements AuthorService{
             return new AuthorDto(author.get());
         }*/
         return null;
+    }
+    public AuthorDto findAuthorById(UUID id) {
+       Optional<Author> author = authorRepository.findById(id);
+       AuthorDto response = null;
+        if(author.isPresent()){
+            response = new AuthorDto(author.get());
+        }
+        return response;
     }
 
     @Override

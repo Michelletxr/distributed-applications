@@ -9,12 +9,10 @@ import java.util.UUID;
 
 @Entity
 @Data
+@ToString(exclude = "author")
+@EqualsAndHashCode(exclude="author")
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
-@ToString
-@Getter
-@Setter
 @Table(name="book", schema = "public")
 public class Book implements Serializable {
 
@@ -32,8 +30,9 @@ public class Book implements Serializable {
 
     private float rating;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable( name = "author_book", joinColumns = {@JoinColumn(name="book_id")},
-            inverseJoinColumns = {@JoinColumn(name="author_id")})
-    private Set<Author> author;
+    @ManyToOne(cascade = CascadeType.ALL)
+    //@JoinTable( name = "author_book", joinColumns = {@JoinColumn(name="book_id")},
+           // inverseJoinColumns = {@JoinColumn(name="author_id")})
+    @JoinColumn(name = "author_id", nullable = true)
+    private Author author;
 }
