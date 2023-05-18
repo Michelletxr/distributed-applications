@@ -3,8 +3,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -31,8 +29,6 @@ public class Book implements Serializable {
     private float rating;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    //@JoinTable( name = "author_book", joinColumns = {@JoinColumn(name="book_id")},
-           // inverseJoinColumns = {@JoinColumn(name="author_id")})
     @JoinColumn(name = "author_id", nullable = true)
     private Author author;
 }

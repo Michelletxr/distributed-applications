@@ -1,5 +1,4 @@
 package com.br.auth.controller;
-
 import com.br.auth.Service.AuthService;
 import com.br.auth.model.User;
 import com.br.auth.security.JWTConfig;
@@ -12,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -26,8 +26,8 @@ public class AuthController {
     private JWTConfig jwtConfig;
 
     record Login(String username, String password){}
-    @PostMapping("/teste")
-    public ResponseEntity<String> teste(@RequestBody  Login login){
+    @PostMapping("/token-login")
+    public ResponseEntity<String> generateToken(@RequestBody  Login login){
         ResponseEntity response;
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(login.username(), login.password());
@@ -45,16 +45,23 @@ public class AuthController {
     }
 
     @PostMapping
-    public ResponseEntity<UUID> save(@RequestBody User.UserRecord user){
+    public ResponseEntity<?> save(@RequestBody User.UserRecord user){
         ResponseEntity response;
-        UUID userId = service.Save(user);
-        if(!Objects.isNull(userId)){
-            response = new ResponseEntity<>(userId, HttpStatus.OK);
+        User userResult = service.Save(user);
+        if(!Objects.isNull(userResult)){
+            response = new ResponseEntity<>(userResult, HttpStatus.OK);
         }else{
             response = new ResponseEntity<>("erro ao tentar salvar usuário", HttpStatus.BAD_REQUEST);
         }
         return response;
     }
+
+    @GetMapping
+    public ResponseEntity<?> findAll(){
+        List<User.UserRecord> users = service.findAll();
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
 
 
     @GetMapping(value = "/{id}")

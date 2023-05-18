@@ -13,20 +13,15 @@ import java.util.*;
 @EqualsAndHashCode(exclude="books")
 @Table(name="author", schema = "public")
 public class Author {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(unique = true, updatable = false)
     private UUID id;
-
     @Column(updatable = false)
     private String name;
-
     private int age;
-
     @OneToMany(mappedBy="author")
     private Set<Book> books;
-
 /*
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "author_book",joinColumns = {@JoinColumn(name="author_id")},

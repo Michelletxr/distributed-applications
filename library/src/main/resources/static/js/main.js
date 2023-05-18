@@ -7,6 +7,9 @@ var messageForm = document.querySelector('#messageForm');
 var messageInput = document.querySelector('#message');
 var messageArea = document.querySelector('#messageArea');
 var connectingElement = document.querySelector('.connecting');
+var listPage = document.querySelector('#listTable');
+
+
 
 var stompClient = null;
 var username = null;
@@ -21,7 +24,8 @@ function connect(event) {
 
     if(username) {
         usernamePage.classList.add('hidden');
-        chatPage.classList.remove('hidden');
+        listPage.classList.remove('hidden');
+        //chatPage.classList.remove('hidden');
 
         var socket = new SockJS('/app');
         stompClient = Stomp.over(socket);
@@ -43,6 +47,10 @@ function onConnected() {
     )
 
     connectingElement.classList.add('hidden');
+}
+
+function loadListBooks(){
+
 }
 
 

@@ -6,12 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+
+import java.util.*;
 
 @Service
 public class AuthService implements UserDetailsService {
@@ -31,8 +29,8 @@ public class AuthService implements UserDetailsService {
         }
         return responseUser;
     }
-    public UUID Save(User.UserRecord requestUser){
-        UUID userId = null;
+    public User Save(User.UserRecord requestUser){
+        User createUser = null;
         if(!Objects.isNull(requestUser)){
 
                 User user = new User().builder()
@@ -42,10 +40,9 @@ public class AuthService implements UserDetailsService {
                         .email(requestUser.email())
                         .build();
 
-                User createUser = repository.save(user);
-                userId = createUser.getId();
+                createUser = repository.save(user);
         }
-        return userId;
+        return createUser;
     }
 
     public User.UserRecord findUserByLogin(String login){
@@ -72,12 +69,20 @@ public class AuthService implements UserDetailsService {
         return new User.UserRecord(
                 user.getUsername(),
                 user.getLogin(),
-                user.getPassword(),
+                "",
                 user.getEmail());
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return repository.findByUserName(username);
+    }
+
+    public List<User.UserRecord> findAll() {
+        List<User.UserRecord> userRecords = new ArrayList<>();
+        for (User u: repository.findAll()) {
+            userRecords.add(buildUserToResponseUser(u));
+        }
+        return userRecords;
     }
 }
