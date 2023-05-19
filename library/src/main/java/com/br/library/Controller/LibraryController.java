@@ -2,27 +2,21 @@ package com.br.library.Controller;
 
 import com.br.library.Dto.AuthorDto;
 import com.br.library.Dto.BookDto;
-import com.br.library.Model.Book;
-import com.br.library.Service.AuthorService;
 import com.br.library.Service.AuthorServiceImpl;
 import com.br.library.Service.BookServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/lib")
+@RequestMapping("/api/lib")
 public class LibraryController {
 
     @Autowired
@@ -30,24 +24,21 @@ public class LibraryController {
     @Autowired
     AuthorServiceImpl serviceAuthor;
 
-    @Value("${server.port}")
-    private int port;
-
     public LibraryController(AuthorServiceImpl serviceAuthor, BookServiceImpl serviceBooks){
         this.serviceAuthor = serviceAuthor;
         this.serviceBooks = serviceBooks;
     }
 
-    public ResponseEntity<?> findAllBooks(@PageableDefault(size = 5, sort={"id"}, direction = Sort.Direction.DESC) Pageable pagination){
-
+    @GetMapping(value = "book")
+    public ResponseEntity<?> findAllBooks(){
         ResponseEntity<?> response;
-        Page<BookDto> bookDto = serviceBooks.findAll(pagination);
+        List<BookDto> bookDto = serviceBooks.findAll();
         response = new ResponseEntity<>(bookDto, HttpStatus.OK);
         return response;
     }
 
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<Object> findByBookId(@PathVariable UUID id){
+    @GetMapping(value = "book/{id}")
+    public ResponseEntity<Object> findBook(@PathVariable UUID id){
 
         BookDto bookDto =  serviceBooks.findById(id);
         ResponseEntity<Object> response;
@@ -60,39 +51,7 @@ public class LibraryController {
         return response;
     }
 
-    @GetMapping(value = "author")
-    public ResponseEntity<Object> findAuthor(@RequestParam(required = false) UUID id_book, @RequestParam(required = false)String book_name, Pageable pagination){
-
-        AuthorDto author = null;
-        ResponseEntity<Object> response;
-
-        if(Objects.nonNull(id_book)){
-            author = serviceAuthor.findAuthorByBookId(id_book);
-        } else if (Objects.nonNull(book_name)) {
-            author = serviceAuthor.findAuthorByBookName(book_name);
-        }else{
-            Page<AuthorDto> authorsDto = serviceAuthor.findAll(pagination);
-        }
-
-        return new ResponseEntity<>(author, HttpStatus.OK);
-    }
-
-    @PostMapping
-    @CacheEvict(value = {"books"}, allEntries = true)
-    public ResponseEntity<UUID> saveBook(@RequestBody @Validated BookDto bookDto){
-        UUID bookId = serviceBooks.save(bookDto);
-        ResponseEntity<UUID> response = new ResponseEntity<UUID>(bookId, HttpStatus.OK);
-        return response;
-    }
-
-    @PostMapping(value = "author-register")
-    public ResponseEntity<UUID> saveAuthor(@RequestBody @Validated AuthorDto authorDto) throws Exception {
-        UUID authorId = serviceAuthor.save(authorDto);
-        ResponseEntity<UUID> response = new ResponseEntity<UUID>(authorId, HttpStatus.OK);
-        return response;
-    }
-
-    @PutMapping(value = "{id}")
+    @PutMapping(value = "book/{id}")
     public ResponseEntity<?> updateBook(@PathVariable UUID id,  @RequestBody BookDto bookRequest){
         ResponseEntity<?> response;
 
@@ -111,6 +70,73 @@ public class LibraryController {
 
         return response;
     }
+
+    @PostMapping(value = "book")
+    @CacheEvict(value = {"books"}, allEntries = true)
+    public ResponseEntity<UUID> saveBook(@RequestBody @Validated BookDto bookDto){
+        UUID bookId = serviceBooks.save(bookDto);
+        ResponseEntity<UUID> response = new ResponseEntity<UUID>(bookId, HttpStatus.OK);
+        return response;
+    }
+
+    @DeleteMapping(value = "book/{id}")
+    @CacheEvict(value = {"books"}, allEntries = true)
+    public ResponseEntity<?> deleteBook(@PathVariable UUID id){
+
+        ResponseEntity<?> response;
+        boolean isDelet = serviceBooks.delete(id);
+
+        if(!isDelet){
+            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }else{
+            response = new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        return response;
+    }
+
+    @DeleteMapping(value = "book")
+    public void deleteAllBooks(){
+        serviceBooks.deleteAll();
+    }
+
+
+    @PostMapping(value = "author")
+    public ResponseEntity<?> saveAuthor(@RequestBody @Validated AuthorDto authorDto) throws Exception {
+        ResponseEntity<?> response = null;
+        try {
+            UUID authorId = serviceAuthor.save(authorDto);
+             response = new ResponseEntity<UUID>(authorId, HttpStatus.OK);
+        }catch (Exception e){
+            response = new ResponseEntity<>("erro ao tentar cadastrar autor!", HttpStatus.BAD_REQUEST);
+        }
+        return response;
+    }
+
+    @GetMapping(value = "author")
+    public ResponseEntity<?> findAllAuthors(){
+        ResponseEntity<?> response;
+        List<AuthorDto> authorDtos = serviceAuthor.findAll();
+        response = new ResponseEntity<>(authorDtos, HttpStatus.OK);
+        return response;
+    }
+
+    @GetMapping(value = "author/{id}")
+    public ResponseEntity<?> findAuthor(@PathVariable UUID id){
+
+        AuthorDto author = null;
+        ResponseEntity<?> response;
+
+        if(Objects.nonNull(id)){
+            author = serviceAuthor.findAuthorById(id);
+            response = new ResponseEntity<>(author, HttpStatus.OK);
+        }else{
+            response = new ResponseEntity<>("erro", HttpStatus.BAD_REQUEST);
+        }
+
+        return response;
+    }
+
 
     @PutMapping(value = "author/{id}")
     public ResponseEntity<?> updateAuthor(@PathVariable UUID id,  @RequestBody AuthorDto authorRequest){
@@ -132,21 +158,6 @@ public class LibraryController {
         return response;
     }
 
-    @DeleteMapping(value = "{id}")
-    @CacheEvict(value = {"books"}, allEntries = true)
-    public ResponseEntity<?> deleteBook(@PathVariable UUID id){
-
-        ResponseEntity<?> response;
-        boolean isDelet = serviceBooks.delete(id);
-
-        if(!isDelet){
-            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }else{
-            response = new ResponseEntity<>(HttpStatus.OK);
-        }
-
-        return response;
-    }
 
     @DeleteMapping(value = "author/{id}")
     public ResponseEntity<?> deleteAuthor(@PathVariable UUID id){
@@ -161,6 +172,12 @@ public class LibraryController {
         }
 
         return response;
+    }
+
+    @GetMapping("/threads")
+    public String getBooks() {
+        List<BookDto> books = serviceBooks.findAll();
+        return "response: " + books +  " current thread: " + Thread.currentThread();
     }
 
 }
