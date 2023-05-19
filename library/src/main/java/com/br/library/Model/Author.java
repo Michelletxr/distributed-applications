@@ -1,7 +1,5 @@
 package com.br.library.Model;
-
 import lombok.*;
-
 import javax.persistence.*;
 import java.util.*;
 
@@ -22,10 +20,4 @@ public class Author {
     private int age;
     @OneToMany(mappedBy="author")
     private Set<Book> books;
-/*
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "author_book",joinColumns = {@JoinColumn(name="author_id")},
-            inverseJoinColumns = {@JoinColumn(name="book_id")})
-    private Set<Book> books;*
- */
 }

@@ -2,17 +2,10 @@ package com.br.library.Controller;
 
 import com.br.library.Dto.AuthorDto;
 import com.br.library.Dto.BookDto;
-import com.br.library.Model.Book;
-import com.br.library.Service.AuthorService;
 import com.br.library.Service.AuthorServiceImpl;
 import com.br.library.Service.BookServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -102,6 +95,11 @@ public class LibraryController {
         return response;
     }
 
+    @DeleteMapping(value = "book")
+    public void deleteAllBooks(){
+        serviceBooks.deleteAll();
+    }
+
 
     @PostMapping(value = "author")
     public ResponseEntity<?> saveAuthor(@RequestBody @Validated AuthorDto authorDto) throws Exception {
@@ -174,6 +172,12 @@ public class LibraryController {
         }
 
         return response;
+    }
+
+    @GetMapping("/threads")
+    public String getBooks() {
+        List<BookDto> books = serviceBooks.findAll();
+        return "response: " + books +  " current thread: " + Thread.currentThread();
     }
 
 }

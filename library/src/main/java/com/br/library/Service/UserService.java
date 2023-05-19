@@ -1,5 +1,4 @@
 package com.br.library.Service;
-
 import com.br.library.Model.User;
 import com.br.library.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +56,6 @@ public class UserService {
         if(response.getStatusCode() == HttpStatus.OK){
             userResponse = (User) response.getBody();
         }
-
         return userResponse;
     }
 

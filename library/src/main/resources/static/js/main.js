@@ -7,9 +7,6 @@ var messageForm = document.querySelector('#messageForm');
 var messageInput = document.querySelector('#message');
 var messageArea = document.querySelector('#messageArea');
 var connectingElement = document.querySelector('.connecting');
-var listPage = document.querySelector('#listTable');
-
-
 
 var stompClient = null;
 var username = null;
@@ -24,8 +21,7 @@ function connect(event) {
 
     if(username) {
         usernamePage.classList.add('hidden');
-        listPage.classList.remove('hidden');
-        //chatPage.classList.remove('hidden');
+        chatPage.classList.remove('hidden');
 
         var socket = new SockJS('/app');
         stompClient = Stomp.over(socket);
@@ -47,10 +43,6 @@ function onConnected() {
     )
 
     connectingElement.classList.add('hidden');
-}
-
-function loadListBooks(){
-
 }
 
 
@@ -92,9 +84,9 @@ function onMessageReceived(payload) {
         messageElement.classList.add('chat-message');
 
         /**var avatarElement = document.createElement('i');
-        var avatarText = document.createTextNode(message.sender[0]);
-        avatarElement.appendChild(avatarText);
-        avatarElement.style['background-color'] = getAvatarColor(message.username);
+         var avatarText = document.createTextNode(message.sender[0]);
+         avatarElement.appendChild(avatarText);
+         avatarElement.style['background-color'] = getAvatarColor(message.username);
          messageElement.appendChild(avatarElement);
          **/
 

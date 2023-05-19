@@ -1,5 +1,4 @@
 package com.br.library.Model;
-
 import lombok.*;
 import javax.persistence.Column;
 import javax.persistence.Entity;

@@ -1,16 +1,11 @@
 package com.br.library.Service;
-
-import com.br.library.Dto.AuthorDto;
 import com.br.library.Dto.BookDto;
 import com.br.library.Model.Author;
 import com.br.library.Model.Book;
 import com.br.library.Repository.AuthorRepository;
 import com.br.library.Repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
 
 @Service
@@ -91,5 +86,10 @@ public class BookServiceImpl implements BookService {
             isDelet = true;
         }
         return isDelet;
+    }
+
+    @Override
+    public void deleteAll() {
+        bookRepository.deleteAll();
     }
 }
