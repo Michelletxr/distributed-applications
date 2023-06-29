@@ -4,7 +4,10 @@ import com.br.library.Dto.AuthorDto;
 import com.br.library.Dto.BookDto;
 import com.br.library.Service.AuthorServiceImpl;
 import com.br.library.Service.BookServiceImpl;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +26,14 @@ public class LibraryController {
     BookServiceImpl serviceBooks;
     @Autowired
     AuthorServiceImpl serviceAuthor;
+
+    @Value("${server.port}")
+    private int serverPort;
+
+    @GetMapping
+    public ResponseEntity list(){
+        return ResponseEntity.ok("OK from " + serverPort);
+    }
 
     public LibraryController(AuthorServiceImpl serviceAuthor, BookServiceImpl serviceBooks){
         this.serviceAuthor = serviceAuthor;

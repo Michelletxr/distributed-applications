@@ -12,7 +12,7 @@ import java.util.concurrent.Executors;
 @Configuration
 public class ConfigThreads {
 
-    @Bean
+   /* @Bean
     AsyncTaskExecutor applicationTaskExecutor() {
         ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
         return new TaskExecutorAdapter(executorService);
@@ -21,5 +21,5 @@ public class ConfigThreads {
     @Bean
     TomcatProtocolHandlerCustomizer<?> protocolHandlerVirtualThreadExecutorCustomizer() {
         return protocolHandler -> protocolHandler.setExecutor(Executors.newVirtualThreadPerTaskExecutor());
-    }
+    }*/
 }

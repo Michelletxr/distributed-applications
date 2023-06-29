@@ -3,6 +3,7 @@ import com.br.auth.Service.AuthService;
 import com.br.auth.model.User;
 import com.br.auth.security.JWTConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +25,14 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
     @Autowired
     private JWTConfig jwtConfig;
+
+    @Value("${server.port}")
+    private int serverPort;
+
+    @GetMapping("/load")
+    public ResponseEntity list(){
+        return ResponseEntity.ok("OK from " + serverPort);
+    }
 
     record Login(String username, String password){}
     @PostMapping("/token-login")
