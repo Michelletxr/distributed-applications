@@ -4,39 +4,28 @@ import com.br.library.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
 public class UserService {
     @Autowired
     RestTemplate restTemplate;
-
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    ServiceFeign serviceFeign;
 
     String authUrl = "http://localhost:8082/api/auth/";
     String notificationsUrl = "http://localhost:8083/api/notifications/send-email";
 
-    public record UserRegister(String userName, String login, String password, String email){}
+    public record UserRegister(String userName, String email){}
     public record SendEmail(String emailFrom, String emailTo, String title, String text){}
 
-    public User registryUser(UserRegister user){
-        HttpEntity<UserRegister> request = new HttpEntity<>(user);
-        User userResponse = null;
-        ResponseEntity response = restTemplate
-                .exchange(authUrl, HttpMethod.POST, request, User.class);
-        if(response.getStatusCode() == HttpStatus.OK){
-            userResponse = save((User) response.getBody());
-            sendNotifications(userResponse.getEmail());
-        }
-
-        return userResponse;
-    }
 
     public void sendNotifications(String emailTo){
         System.out.println("enviando mensagem para: "+ emailTo);
@@ -49,16 +38,18 @@ public class UserService {
         System.out.println(response.getBody());
     }
 
-    public User getUser(UUID id){
-        User userResponse = null;
-        ResponseEntity response = restTemplate
-                .getForEntity(authUrl.concat(String.valueOf(id)), User.class);
-        if(response.getStatusCode() == HttpStatus.OK){
-            userResponse = (User) response.getBody();
+    public UserRegister getUser(UUID id){
+        User user = serviceFeign.getUserById(id);
+        if(!Objects.isNull(user)){
+
+            return new UserRegister(user.getUserName(), user.getEmail());
         }
-        return userResponse;
+        return null;
     }
 
+    public User registryUser(UserRegister user){
+        return serviceFeign.registryUser(user);
+    }
     public List<User> findAll() {
         return userRepository.findAll();
     }

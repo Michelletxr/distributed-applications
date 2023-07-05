@@ -18,7 +18,7 @@ public class UserController {
     }
 
     @GetMapping(value="{id}")
-    public User getUser(@PathVariable UUID id){
+    public UserService.UserRegister getUser(@PathVariable UUID id){
         return userService.getUser(id);
     }
 

@@ -30,9 +30,9 @@ public class LibraryController {
     @Value("${server.port}")
     private int serverPort;
 
-    @GetMapping
-    public ResponseEntity list(){
-        return ResponseEntity.ok("OK from " + serverPort);
+    @GetMapping(value = "portService")
+    public ResponseEntity checkPortService(){
+        return ResponseEntity.ok("Library running in " + serverPort);
     }
 
     public LibraryController(AuthorServiceImpl serviceAuthor, BookServiceImpl serviceBooks){
@@ -168,7 +168,6 @@ public class LibraryController {
 
         return response;
     }
-
 
     @DeleteMapping(value = "author/{id}")
     public ResponseEntity<?> deleteAuthor(@PathVariable UUID id){

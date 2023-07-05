@@ -29,9 +29,9 @@ public class AuthController {
     @Value("${server.port}")
     private int serverPort;
 
-    @GetMapping("/load")
-    public ResponseEntity list(){
-        return ResponseEntity.ok("OK from " + serverPort);
+    @GetMapping(value = "portService")
+    public ResponseEntity checkPortService(){
+        return ResponseEntity.ok("Auth running in " + serverPort);
     }
 
     record Login(String username, String password){}
